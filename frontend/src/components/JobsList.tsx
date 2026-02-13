@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import api from "../services/api";
+import api, { type Candidate } from "../services/api";
+import JobsCard from "./JobsCard";
 
-export default function JobsList() {
+export default function JobsList({candidate}: {candidate: Candidate}) {
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,12 +34,10 @@ export default function JobsList() {
   }
 
   return (
-    <>
-      <h1>Jobs List</h1>
-
+    <div className="grid grid-cols-2">
       {jobs.map((e: any) => (
-        <p key={e.id}>{e.id} - {e.title}</p>
+        <JobsCard key={e.id} jobId={e.id} title={e.title} uuid={candidate.uuid} candidateId={candidate.candidateId} />
       ))}
-    </>
+    </div>
   )
 }
