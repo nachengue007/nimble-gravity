@@ -14,3 +14,11 @@ export interface Candidate {
   lastName: string;
   email: string;
 }
+
+export interface JobsProps {
+  jobId: string,
+  title: string,
+  uuid: string,
+  candidateId: string,
+  applicationId: string,
+}

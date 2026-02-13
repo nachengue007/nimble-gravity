@@ -1,17 +1,12 @@
 import { useState } from "react"
+import api, { type JobsProps } from "../services/api"
 
-interface JobsCardProps {
-  jobId: string,
-  title: string,
-  uuid: string,
-  candidateId: string,
-}
 
-export default function JobsCard({ jobId, title, uuid, candidateId }: JobsCardProps) {
+export default function JobsCard({ jobId, title, uuid, candidateId, applicationId }: JobsProps) {
   const [repoUrl, setRepoUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -19,25 +14,47 @@ export default function JobsCard({ jobId, title, uuid, candidateId }: JobsCardPr
       uuid: uuid,
       jobId: jobId,
       candidateId: candidateId,
-      repoUrl: repoUrl
+      repoUrl: repoUrl,
+      applicationId: applicationId,
     }
 
     console.log(payload);
 
-    setIsSubmitting(true);
+    try {
+      setIsSubmitting(true);
+      setError("");
+
+      const response = await api.post("api/candidate/apply-to-job", payload, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (response.data.ok) {
+        alert("Se envió con éxito");
+      }
+    }
+    catch (e: any) {
+      const errorMessage = e.response?.data?.message || e.message || "Error al enviar la postulación";
+      setError(errorMessage);
+      alert(errorMessage);
+    }
+    finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <div key={jobId} className="w-full max-w-4xl mx-auto my-8 bg-white border border-gray-100 shadow-xl rounded-2xl overflow-hidden">
       <div className="flex flex-col md:flex-row">
-        
+
         {/* Lado izquierdo: Info del puesto */}
         <div className="p-8 bg-slate-50 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-100">
           <h1 className="mt-4 text-2xl font-extrabold text-gray-900 leading-tight">
             {title}
           </h1>
         </div>
-  
+
         {/* Lado derecho: Formulario */}
         <div className="p-8 md:w-2/3">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -46,9 +63,9 @@ export default function JobsCard({ jobId, title, uuid, candidateId }: JobsCardPr
                 Enlace del Repositorio (GitHub)
               </label>
               <div className="relative">
-                <input 
-                  type="url" 
-                  placeholder="https://github.com/usuario/proyecto" 
+                <input
+                  type="url"
+                  placeholder="https://github.com/usuario/proyecto"
                   value={repoUrl}
                   onChange={(e) => setRepoUrl(e.target.value)}
                   required
@@ -59,18 +76,16 @@ export default function JobsCard({ jobId, title, uuid, candidateId }: JobsCardPr
                 Asegúrate de que el repositorio sea público o tengamos acceso.
               </p>
             </div>
-  
-            <button 
+
+            <button
               type="submit"
               disabled={isSubmitting}
               className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-bold rounded-xl text-white bg-gray-900 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg"
             >
               Enviar Postulación
-              <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
             </button>
           </form>
         </div>
-  
       </div>
     </div>
   )

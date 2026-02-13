@@ -36,7 +36,7 @@ export default function JobsList({candidate}: {candidate: Candidate}) {
   return (
     <div className="grid grid-cols-2">
       {jobs.map((e: any) => (
-        <JobsCard key={e.id} jobId={e.id} title={e.title} uuid={candidate.uuid} candidateId={candidate.candidateId} />
+        <JobsCard key={e.id} jobId={e.id} title={e.title} uuid={candidate.uuid} candidateId={candidate.candidateId} applicationId={candidate.applicationId} />
       ))}
     </div>
   )
