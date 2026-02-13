@@ -69,7 +69,7 @@ function App() {
 
       <div className="flex justify-center w-full">
         <div className='items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-100 rounded-lg shadow-md'>
-          <span className='text-sm '>hecho por Ignacio Fonseca</span>
+          <span className='text-sm'>Hecho por <a className='text-blue-600 underline' href='https://www.linkedin.com/in/ignacio-fonseca-7b5a96263/' target="_blank">Ignacio Fonseca</a></span>
         </div>
       </div>
     </div>
